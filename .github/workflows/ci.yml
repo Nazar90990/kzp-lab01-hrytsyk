@@ -1,0 +1,40 @@
+name: Java CI / CD
+
+on:
+  push:
+    branches:
+      - lab-01-java
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - lab-01-java
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Build and Verify with Maven
+      run: mvn clean verify
+
+    - name: Upload JAR Artifact
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: lab01-jar-${{ runner.os }}
+        path: target/lab01-1.0.0.jar
