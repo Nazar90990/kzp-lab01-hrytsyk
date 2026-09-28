@@ -33,8 +33,7 @@ jobs:
       run: mvn clean verify
 
     - name: Upload JAR Artifact
-      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
       with:
-        name: lab01-jar-${{ runner.os }}
+        name: lab01-jar-${{ matrix.os }}
         path: target/lab01-1.0.0.jar
