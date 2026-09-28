@@ -23,8 +23,12 @@ public final class Main {
      * @param args аргументи командного рядка
      */
     public static void main(String[] args) {
-        if (args.length > 0 && "--help".equals(args[0])) {
-            System.out.printf("Використання: java -jar lab01.jar [--help] [--input <файл>] [--output <файл>]%n");
+        if (args.length > 0 && "--version".equals(args[0])) {
+            System.out.println("lab01 version 1.0.0");
+            return;
+        }
+        if (args.length > 0 && "--help".equals(args[0])){
+            System.out.printf("Використання: java -jar lab01.jar [--help] [--version] [--input <файл>] [--output <файл>]%n");
             return;
         }
 
