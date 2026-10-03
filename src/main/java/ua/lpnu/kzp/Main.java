@@ -22,22 +22,26 @@ public final class Main {
      * @param args аргументи командного рядка
      */
     public static void main(String[] args) {
+        System.exit(run(args));
+    }
+
+    private static int run(String[] args) {
         if (contains(args, "--version")) {
             String build = System.getProperty("ci.build.number", "local");
             System.out.printf("lab01 version %s (CI build: %s)%n", VERSION, build);
-            return;
+            return 0;
         }
         if (contains(args, "--help")) {
             printHelp();
-            return;
+            return 0;
         }
 
         CliOptions options;
         try {
             options = CliOptions.parse(args);
         } catch (IllegalArgumentException exception) {
-            System.err.println("Помилка аргументів: " + exception.getMessage());
-            return;
+            System.err.println("Помилка аргументів: %s".formatted(exception.getMessage()));
+            return 2;
         }
 
         List<String> lines;
@@ -45,7 +49,7 @@ public final class Main {
             lines = FileReport.readLines(options.input());
         } catch (IOException exception) {
             System.err.printf("Помилка читання файлу %s: %s%n", options.input(), exception.getMessage());
-            return;
+            return 1;
         }
 
         List<UtilityRecord> records = new ArrayList<>();
@@ -67,7 +71,9 @@ public final class Main {
             System.out.printf("Звіт успішно записано у файл: %s%n", options.output());
         } catch (IOException exception) {
             System.err.printf("Помилка запису файлу звіту: %s%n", exception.getMessage());
+            return 1;
         }
+        return 0;
     }
 
     private static boolean contains(String[] args, String value) {
@@ -100,7 +106,7 @@ public final class Main {
                         output = path;
                     }
                 } else {
-                    throw new IllegalArgumentException("невідомий параметр: " + args[index]);
+                    throw new IllegalArgumentException("невідомий параметр: %s".formatted(args[index]));
                 }
             }
             return new CliOptions(input, output);
