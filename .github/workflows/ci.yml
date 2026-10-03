@@ -1,12 +1,7 @@
-name: Java CI / CD
+name: Java CI
 
 on:
   push:
-    branches:
-      - lab-01-java
-      - main
-    tags:
-      - 'v*'
   pull_request:
     branches:
       - lab-01-java
@@ -29,11 +24,21 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
-    - name: Build and Verify with Maven
-      run: mvn clean verify
+    - name: Verify and package on Unix
+      if: runner.os != 'Windows'
+      run: ./mvnw -B -Dci.build.number=${{ github.run_number }} clean verify package
+
+    - name: Verify and package on Windows
+      if: runner.os == 'Windows'
+      run: .\mvnw.cmd -B -Dci.build.number=${{ github.run_number }} clean verify package
+
+    - name: Check version output
+      shell: bash
+      run: java -Dci.build.number=${{ github.run_number }} -jar target/lab01-1.0.0.jar --version
 
     - name: Upload JAR Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: lab01-jar-${{ matrix.os }}
+        name: lab01-jar-${{ matrix.os }}-build-${{ github.run_number }}
         path: target/lab01-1.0.0.jar
+        if-no-files-found: error

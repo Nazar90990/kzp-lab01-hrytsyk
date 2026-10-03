@@ -1,17 +1,16 @@
 package ua.lpnu.kzp;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Головний клас для лабораторної роботи №1 (Варіант 9: Комунальні показники).
+ * Головний клас консольної програми для комунальних показників.
  */
 public final class Main {
+
+     private static final String VERSION = "1.0.0";
 
     private Main() {
         // Забороняє створення екземплярів службового класу.
@@ -23,109 +22,88 @@ public final class Main {
      * @param args аргументи командного рядка
      */
     public static void main(String[] args) {
-        if (args.length > 0 && "--version".equals(args[0])) {
-            System.out.println("lab01 version 1.0.0");
+        if (contains(args, "--version")) {
+            String build = System.getProperty("ci.build.number", "local");
+            System.out.printf("lab01 version %s (CI build: %s)%n", VERSION, build);
             return;
         }
-        if (args.length > 0 && "--help".equals(args[0])){
-            System.out.printf("Використання: java -jar lab01.jar [--help] [--version] [--input <файл>] [--output <файл>]%n");
+        if (contains(args, "--help")) {
+            printHelp();
             return;
         }
 
-        Path inputPath = Path.of("data", "input.csv");
-        Path outputPath = Path.of("out", "report.txt");
-
-        // Перевірка аргументів командного рядка для входу/виходу
-        for (int i = 0; i < args.length; i++) {
-            if ("--input".equals(args[i]) && i + 1 < args.length) {
-                inputPath = Path.of(args[i + 1]);
-            } else if ("--output".equals(args[i]) && i + 1 < args.length) {
-                outputPath = Path.of(args[i + 1]);
-            }
+        CliOptions options;
+        try {
+            options = CliOptions.parse(args);
+        } catch (IllegalArgumentException exception) {
+            System.err.println("Помилка аргументів: " + exception.getMessage());
+            return;
         }
 
         List<String> lines;
         try {
-            lines = Files.readAllLines(inputPath, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            System.err.printf("Помилка читання файлу %s: %s%n", inputPath, e.getMessage());
+            lines = FileReport.readLines(options.input());
+        } catch (IOException exception) {
+            System.err.printf("Помилка читання файлу %s: %s%n", options.input(), exception.getMessage());
             return;
         }
 
+        List<UtilityRecord> records = new ArrayList<>();
         List<String> errors = new ArrayList<>();
-        int validCount = 0;
-        double totalConsumption = 0.0;
-        double totalCost = 0.0;
-        double maxConsumption = Double.NEGATIVE_INFINITY;
-
         for (int index = 0; index < lines.size(); index++) {
-            String line = lines.get(index).trim();
-            if (line.isEmpty()) {
-                continue;
-            }
-
-            // Формат варіанта 9: meter;value;date;tariff (4 поля)
-            String[] fields = line.split(";", -1);
-            if (fields.length != 4) {
-                errors.add("Рядок %d: очікується 4 поля, отримано %d".formatted(index + 1, fields.length));
-                continue;
-            }
-
-            if (fields[0].isBlank() || fields[2].isBlank()) {
-                errors.add("Рядок %d: порожня назва лічильника або дата".formatted(index + 1));
-                continue;
-            }
-
             try {
-                double value = Double.parseDouble(fields[1]);
-                double tariff = Double.parseDouble(fields[3]);
-
-                if (value < 0 || tariff < 0) {
-                    errors.add("Рядок %d: від'ємне числове значення".formatted(index + 1));
-                    continue;
-                }
-
-                validCount++;
-                totalConsumption += value;
-                totalCost += value * tariff;
-                maxConsumption = Math.max(maxConsumption, value);
-
-            } catch (NumberFormatException exception) {
-                errors.add("Рядок %d: числове поле має помилковий формат".formatted(index + 1));
+                records.add(UtilityRecordParser.parse(lines.get(index)));
+            } catch (IllegalArgumentException exception) {
+                errors.add("Рядок %d: %s".formatted(index + 1, exception.getMessage()));
             }
         }
 
-        if (validCount == 0) {
-            maxConsumption = 0.0;
-        }
-
-        // Формування звіту
-        StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(String.format(Locale.ROOT, "=== ЗВІТ (Варіант 9: Комунальні показники) ===%n"));
-        reportBuilder.append(String.format(Locale.ROOT, "Коректних записів: %d%n", validCount));
-        reportBuilder.append(String.format(Locale.ROOT, "Сумарне споживання: %.2f%n", totalConsumption));
-        reportBuilder.append(String.format(Locale.ROOT, "Загальна вартість: %.2f грн%n", totalCost));
-        reportBuilder.append(String.format(Locale.ROOT, "Найбільше споживання: %.2f%n", maxConsumption));
-        reportBuilder.append(String.format(Locale.ROOT, "Помилок: %d%n", errors.size()));
-        for (String err : errors) {
-            reportBuilder.append(err).append(System.lineSeparator());
-        }
-
-        String report = reportBuilder.toString();
-
-        // Вивід у консоль
+        UtilityReportCalculator.Summary summary = UtilityReportCalculator.calculate(records);
+        String report = ReportFormatter.format(summary, errors);
         System.out.print(report);
 
-        // Запис у файл звіту
         try {
-            Path parent = outputPath.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
+            FileReport.writeReport(options.output(), report);
+            System.out.printf("Звіт успішно записано у файл: %s%n", options.output());
+        } catch (IOException exception) {
+            System.err.printf("Помилка запису файлу звіту: %s%n", exception.getMessage());
+        }
+    }
+
+    private static boolean contains(String[] args, String value) {
+        for (String argument : args) {
+            if (value.equals(argument)) {
+                return true;
             }
-            Files.writeString(outputPath, report, StandardCharsets.UTF_8);
-            System.out.printf("Звіт успішно записано у файл: %s%n", outputPath);
-        } catch (IOException e) {
-            System.err.printf("Помилка запису файлу звіту: %s%n", e.getMessage());
+        }
+        return false;
+    }
+
+    private static void printHelp() {
+        System.out.println("Використання: java -jar lab01-1.0.0.jar [--help] [--version] [--input <файл>] [--output <файл>]");
+        System.out.println("За замовчуванням: data/input.csv -> out/report.txt");
+    }
+
+    private record CliOptions(Path input, Path output) {
+        private static CliOptions parse(String[] args) {
+            Path input = Path.of("data", "input.csv");
+            Path output = Path.of("out", "report.txt");
+            for (int index = 0; index < args.length; index++) {
+                if ("--input".equals(args[index]) || "--output".equals(args[index])) {
+                    if (index + 1 >= args.length || args[index + 1].startsWith("--")) {
+                        throw new IllegalArgumentException("після %s потрібен шлях".formatted(args[index]));
+                    }
+                    Path path = Path.of(args[++index]);
+                    if ("--input".equals(args[index - 1])) {
+                        input = path;
+                    } else {
+                        output = path;
+                    }
+                } else {
+                    throw new IllegalArgumentException("невідомий параметр: " + args[index]);
+                }
+            }
+            return new CliOptions(input, output);
         }
     }
 }
