@@ -27,11 +27,11 @@ jobs:
 
     - name: Verify and package on Unix
       if: runner.os != 'Windows'
-      run: ./mvnw -B -Dci.build.number=${{ github.run_number }} clean verify package
+      run: ./mvnw -B "-Dci.build.number=${{ github.run_number }}" clean verify package
 
     - name: Verify and package on Windows
       if: runner.os == 'Windows'
-      run: .\mvnw.cmd -B -Dci.build.number=${{ github.run_number }} clean verify package
+      run: .\mvnw.cmd -B "-Dci.build.number=${{ github.run_number }}" clean verify package
 
     - name: Check version output
       shell: bash
