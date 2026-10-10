@@ -9,7 +9,7 @@ public final class UtilityReportCalculator {
     }
 
     /**
-     * Обчислює сумарне споживання, вартість, максимум і середнє.
+     * Обчислює сумарне споживання, вартість і максимум.
      *
      * @param records перевірені записи
      * @return агреговані показники
@@ -23,12 +23,11 @@ public final class UtilityReportCalculator {
             totalCost += record.value() * record.tariff();
             maximumConsumption = Math.max(maximumConsumption, record.value());
         }
-        double averageConsumption = records.isEmpty() ? 0.0 : totalConsumption / records.size();
-        return new Summary(records.size(), totalConsumption, totalCost, maximumConsumption, averageConsumption);
+        return new Summary(records.size(), totalConsumption, totalCost, maximumConsumption);
     }
 
     /** Результат обчислення показників. */
     public record Summary(int validCount, double totalConsumption, double totalCost,
-                          double maximumConsumption, double averageConsumption) {
+                          double maximumConsumption) {
     }
 }

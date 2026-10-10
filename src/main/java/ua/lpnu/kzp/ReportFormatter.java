@@ -23,7 +23,6 @@ public final class ReportFormatter {
         report.append(String.format(Locale.ROOT, "Сумарне споживання: %.2f%n", summary.totalConsumption()));
         report.append(String.format(Locale.ROOT, "Загальна вартість: %.2f грн%n", summary.totalCost()));
         report.append(String.format(Locale.ROOT, "Найбільше споживання: %.2f%n", summary.maximumConsumption()));
-        report.append(String.format(Locale.ROOT, "Середнє споживання: %.2f%n", summary.averageConsumption()));
         report.append(String.format(Locale.ROOT, "Помилок: %d%n", errors.size()));
         errors.forEach(error -> report.append(error).append(System.lineSeparator()));
         return report.toString();
