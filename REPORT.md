@@ -4,7 +4,7 @@
 
 - Предметна область: комунальні показники.
 - Варіант: `meter:String; date:String; value:double; tariff:double`.
-- Система розробки: Windows, Java 21, Maven.
+- Система розробки: Windows, Java 25, Maven.
 
 ## Реалізація
 

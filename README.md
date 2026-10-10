@@ -24,7 +24,7 @@ meter;date;value;tariff
 
 ## Збірка і запуск
 
-Потрібна Java 21 або новіша. Maven Wrapper завантажує Maven автоматично.
+Потрібна Java 25 або новіша. Maven Wrapper завантажує Maven автоматично.
 
 ```bash
 # Ubuntu/macOS
