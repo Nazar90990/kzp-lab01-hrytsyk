@@ -54,18 +54,6 @@ java -jar target/lab01-1.0.0.jar --input path/to/input.csv --output out/custom-r
 
 За замовчуванням читається `data/input.csv`, а звіт записується в `out/report.txt`.
 
-### Кодування консолі Windows
-
-Якщо PowerShell показує українські символи як `????`, перед запуском увімкніть UTF-8:
-
-```powershell
-chcp 65001
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-java -jar target\lab01-1.0.0.jar
-```
-
-Файл звіту програма завжди записує в UTF-8 незалежно від кодування консолі.
-
 ## CI/CD
 
 GitHub Actions запускає `verify` і пакування на `ubuntu-latest`, `windows-latest` та `macos-latest`, використовує кеш Maven і публікує JAR як артефакт з номером workflow-запуску в назві. SpotBugs запускається у фазі `verify`.
