@@ -61,7 +61,7 @@ mvnw.cmd clean verify package
 java -jar target/lab01-2.0.0.jar --input data/input.csv --output out/report.txt
 ```
 
-Очікуваний результат запуску: 3 коректні записи, сумарне споживання `202.80`, загальна вартість `1361.91 грн`, найбільше споживання `145.50`, 2 помилки. Maven Verify проходить разом зі SpotBugs, а Maven Shade Plugin створює виконуваний JAR.
+Результат запуску: 3 коректні записи, сумарне споживання `202.80`, загальна вартість `1361.91 грн`, найбільше споживання `145.50`, 2 помилки. Новий звіт побайтно збігається з контрольним файлом `out/report-lab01-baseline.txt`, тому рефакторинг не змінив поведінку. Maven Verify проходить разом зі SpotBugs, а Maven Shade Plugin створює виконуваний JAR `target/lab01-2.0.0.jar`.
 
 ## GitHub Issues і Pull Request
 
