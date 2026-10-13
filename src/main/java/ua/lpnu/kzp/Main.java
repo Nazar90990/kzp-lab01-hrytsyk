@@ -10,7 +10,7 @@ import java.util.List;
  */
 public final class Main {
 
-     private static final String VERSION = "1.0.0";
+     private static final String VERSION = "2.0.0";
 
     private Main() {
         // Забороняє створення екземплярів службового класу.
@@ -56,7 +56,7 @@ public final class Main {
         List<String> errors = new ArrayList<>();
         for (int index = 0; index < lines.size(); index++) {
             try {
-                records.add(UtilityRecordParser.parse(lines.get(index)));
+                records.add(UtilityRecord.fromCsv(lines.get(index)));
             } catch (IllegalArgumentException exception) {
                 errors.add("Рядок %d: %s".formatted(index + 1, exception.getMessage()));
             }
@@ -86,7 +86,7 @@ public final class Main {
     }
 
     private static void printHelp() {
-        System.out.println("Використання: java -jar lab01-1.0.0.jar [--help] [--version] [--input <файл>] [--output <файл>]");
+        System.out.println("Використання: java -jar lab01-2.0.0.jar [--help] [--version] [--input <файл>] [--output <файл>]");
         System.out.println("За замовчуванням: data/input.csv -> out/report.txt");
     }
 
