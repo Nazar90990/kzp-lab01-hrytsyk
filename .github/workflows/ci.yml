@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - lab-01-java
+      - lab-02-java
       - main
 
 jobs:
@@ -35,11 +36,11 @@ jobs:
 
     - name: Check version output
       shell: bash
-      run: java -Dci.build.number=${{ github.run_number }} -jar target/lab01-1.0.0.jar --version
+      run: java -Dci.build.number=${{ github.run_number }} -jar target/lab01-2.0.0.jar --version
 
     - name: Upload JAR Artifact
       uses: actions/upload-artifact@v4
       with:
         name: lab01-jar-${{ matrix.os }}-build-${{ github.run_number }}
-        path: target/lab01-1.0.0.jar
+        path: target/lab01-2.0.0.jar
         if-no-files-found: error
