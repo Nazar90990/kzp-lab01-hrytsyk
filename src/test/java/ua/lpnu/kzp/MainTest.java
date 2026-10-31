@@ -2,6 +2,7 @@ package ua.lpnu.kzp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -10,6 +11,46 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
+
+    @Test
+    void commandLineParserUsesDefaultPaths() {
+        CommandLineParser.Command command = CommandLineParser.parse(new String[0]);
+
+        assertEquals(CommandLineParser.Action.RUN, command.action());
+        assertEquals(java.nio.file.Path.of("data", "input.csv"), command.input());
+        assertEquals(java.nio.file.Path.of("out", "report.txt"), command.output());
+    }
+
+    @Test
+    void commandLineParserReadsSpecifiedPaths() {
+        CommandLineParser.Command command = CommandLineParser.parse(
+                new String[]{"--input", "source.csv", "--output", "result.txt"});
+
+        assertEquals(java.nio.file.Path.of("source.csv"), command.input());
+        assertEquals(java.nio.file.Path.of("result.txt"), command.output());
+    }
+
+    @Test
+    void commandLineParserRecognizesHelpAndVersionBeforeOtherOptions() {
+        assertEquals(CommandLineParser.Action.HELP,
+                CommandLineParser.parse(new String[]{"--unknown", "--help"}).action());
+        assertEquals(CommandLineParser.Action.VERSION,
+                CommandLineParser.parse(new String[]{"--unknown", "--version"}).action());
+    }
+
+    @Test
+    void commandLineParserRejectsMissingPathsAndUnknownOptions() {
+        assertThrows(IllegalArgumentException.class,
+                () -> CommandLineParser.parse(new String[]{"--input"}));
+        assertThrows(IllegalArgumentException.class,
+                () -> CommandLineParser.parse(new String[]{"--other"}));
+    }
+
+    @Test
+    void buildVersionIsLoadedFromTheMavenFilteredResource() {
+        assertNotNull(BuildVersion.current());
+        assertFalse(BuildVersion.current().isBlank());
+    }
 
     @Test
     void parsesUkrainianMeterRecord() {

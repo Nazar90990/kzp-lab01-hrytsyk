@@ -41,15 +41,15 @@ meter;date;value;tariff
 Запуск зі значеннями за замовчуванням:
 
 ```bash
-java -jar target/lab01-2.0.0.jar
+java -jar target/lab01.jar
 ```
 
 Додаткові режими:
 
 ```bash
-java -jar target/lab01-2.0.0.jar --help
-java -jar target/lab01-2.0.0.jar --version
-java -jar target/lab01-2.0.0.jar --input path/to/input.csv --output out/custom-report.txt
+java -jar target/lab01.jar --help
+java -jar target/lab01.jar --version
+java -jar target/lab01.jar --input path/to/input.csv --output out/custom-report.txt
 ```
 
 За замовчуванням читається `data/input.csv`, а звіт записується в `out/report.txt`.
@@ -62,7 +62,7 @@ java -jar target/lab01-2.0.0.jar --input path/to/input.csv --output out/custom-r
 ```powershell
 chcp 65001
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-java -jar target\lab01-2.0.0.jar
+java -jar target\lab01.jar
 ```
 
 Вхідний файл і звіт програма обробляє у кодуванні UTF-8.
@@ -71,8 +71,10 @@ java -jar target\lab01-2.0.0.jar
 
 GitHub Actions запускає `verify` і пакування на `ubuntu-latest`, `windows-latest` та `macos-latest`, використовує кеш Maven і публікує JAR як артефакт з номером workflow-запуску в назві. SpotBugs запускається у фазі `verify`.
 
-Версія програми `2.0.0` є версією вихідного коду і фіксується Git-тегом `v2.0.0`. Номер CI-збірки є окремим послідовним номером конкретного запуску workflow: він змінюється для кожного запуску й не описує сумісність або зміст версії програми. У CI номер передається до програми через `-Dci.build.number` і показується в `--version`.
+Єдине джерело версії програми — `pom.xml`. Під час Maven-збірки значення автоматично підставляється у ресурс програми та показується параметром `--version`. Номер CI-збірки є окремим послідовним номером конкретного запуску workflow: він змінюється для кожного запуску й не описує версію продукту. У CI номер передається до програми через `-Dci.build.number`.
 
 ## Клас-сутність
 
 `UtilityRecord` має `private final`-поля `meter`, `date`, `value` і `tariff`. Конструктор перевіряє інваріанти, а статична фабрика `fromCsv` перетворює рядок CSV на коректний об'єкт. `toString` використовує `Locale.ROOT`. Для підсумків використовується незмінний record `UtilityReportCalculator.Summary`.
+
+Параметри командного рядка розбирає `CommandLineParser`, а `ApplicationController` керує читанням, обробкою записів і створенням звіту. `Main` лише координує запуск і повертає код завершення. Версія визначається у `pom.xml` і автоматично додається Maven до ресурсу збірки, який використовує `--version`.
