@@ -88,6 +88,8 @@ meter;date;value;tariff
 
 Workflow GitHub Actions запускає `clean verify package`, перевіряє точний вивід `--version` та завантажує JAR-артефакт на Ubuntu, Windows і macOS. У Pull Request #12 усі 6 перевірок успішні.
 
+У репозиторії звіт зберігається у форматі Markdown у цьому файлі `REPORT.md`. Файл звіту `.docx` призначений для завантаження до ВНС і не додається до GitHub.
+
 ## 8. GitHub Issues і Pull Request
 
 | № GitHub Issue | Зміна | Перевірка |
