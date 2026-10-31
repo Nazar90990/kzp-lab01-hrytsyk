@@ -151,7 +151,9 @@ Workflow GitHub Actions запускає `clean verify package`, перевір�
 | [Issue #9](https://github.com/Nazar90990/kzp-lab01-hrytsyk/issues/9) | Документація та CI лабораторної роботи № 2 | Maven-перевірки, JAR і GitHub Actions на трьох ОС |
 | [Issue #11](https://github.com/Nazar90990/kzp-lab01-hrytsyk/issues/11) | Версія з `pom.xml` та розподіл відповідальностей класів | 13 локальних тестів; 6 успішних CI-перевірок у PR #12 |
 
-Pull Request [#10](https://github.com/Nazar90990/kzp-lab01-hrytsyk/pull/10) з основною реалізацією лабораторної роботи № 2 об'єднано в `main`. Pull Request [#12](https://github.com/Nazar90990/kzp-lab01-hrytsyk/pull/12) містить подальше виправлення джерела версії та структури `Main`; стан на момент підготовки цього звіту — відкритий, усі CI-перевірки успішні. Після його злиття Issue #11 закриється автоматично.
+Pull Request [#10](https://github.com/Nazar90990/kzp-lab01-hrytsyk/pull/10) з основною реалізацією лабораторної роботи № 2 об'єднано в `main`. Pull Request [#12](https://github.com/Nazar90990/kzp-lab01-hrytsyk/pull/12) містить подальше виправлення джерела версії та структури `Main`; його об'єднано в `main`, усі CI-перевірки успішні, Issue #11 закрито.
+
+Відгук одногрупника (Approved) на основну реалізацію лабораторної роботи № 2: [PR #10, review](https://github.com/Nazar90990/kzp-lab01-hrytsyk/pull/10#pullrequestreview-5503421731).
 
 ## 9. Порівняння поведінки
 
