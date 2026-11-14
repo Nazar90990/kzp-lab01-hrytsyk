@@ -17,11 +17,11 @@ final class ApplicationController {
             return 1;
         }
 
-        List<UtilityRecord> records = new ArrayList<>();
+        List<UtilityReading> records = new ArrayList<>();
         List<String> errors = new ArrayList<>();
         for (int index = 0; index < lines.size(); index++) {
             try {
-                records.add(UtilityRecord.fromCsv(lines.get(index)));
+                records.add(UtilityReading.fromCsv(lines.get(index)));
             } catch (IllegalArgumentException exception) {
                 errors.add("Рядок %d: %s".formatted(index + 1, exception.getMessage()));
             }

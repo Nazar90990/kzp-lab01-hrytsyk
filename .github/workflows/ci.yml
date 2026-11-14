@@ -6,6 +6,7 @@ on:
     branches:
       - lab-01-java
       - lab-02-java
+      - lab-03-java
       - main
 
 jobs:
