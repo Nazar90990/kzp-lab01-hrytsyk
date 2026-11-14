@@ -325,15 +325,15 @@ AAA — це Arrange, Act, Assert: підготувати вхідні дані,
 
 Виконано команду `.\mvnw.cmd -B clean verify package` — `BUILD SUCCESS`, 20 тестів пройшли (13 попередніх і 7 нових), SpotBugs не знайшов помилок або попереджень. Створено виконуваний `target/lab01.jar`; стабільне ім'я артефакту залишене без змін. Запуск `java -jar target\lab01.jar --input data\input.csv --output out\report.txt` завершився успішно. Порівняння з `out/report-lab01-baseline.txt` після нормалізації CRLF/LF підтвердило ідентичність усього звіту. `java -jar target\lab01.jar --version` виводить `lab01 version 3.0.0 (CI build: local)`. `git diff --check` завершився з кодом 0.
 
-Workflow `.github/workflows/ci.yml` налаштований на три ОС, перевіряє версію та публікує JAR артефактом. Умови гілок для Pull Request доповнено `lab-03-java`. CI-конфігурація готова; віддалений запуск очікує публікації гілки, тому результати CI та артефактів на трьох ОС наразі очікуються. Поточна сторінка Actions і майбутніх артефактів: [GitHub Actions](https://github.com/Nazar90990/kzp-lab01-hrytsyk/actions).
+Workflow `.github/workflows/ci.yml` налаштований на три ОС, перевіряє версію та публікує JAR артефактом. Умови гілок для Pull Request доповнено `lab-03-java`. Після публікації гілки CI успішно завершився на Ubuntu, Windows і macOS у [run #51](https://github.com/Nazar90990/kzp-lab01-hrytsyk/actions/runs/43643645074); зібрано JAR-артефакти для кожної ОС. Поточна сторінка [GitHub Actions](https://github.com/Nazar90990/kzp-lab01-hrytsyk/actions).
 
 ## 11. GitHub Issues і Pull Request
 
 | Елемент | Статус | Зміна / перевірка |
 |---|---|---|
-| Нова Issue для ЛР3 | Очікує ручного входу до GitHub і створення | Попередня [Issue #11](https://github.com/Nazar90990/kzp-lab01-hrytsyk/issues/11) стосується ЛР2 і станом на 2026-11-14 відкрита |
-| Pull Request | Очікує ручного входу до GitHub і створення | Гілка `lab-03-java` готова локально; PR не створювався |
-| CI run | Очікує публікації гілки та віддаленого запуску | CI налаштований на Ubuntu, Windows і macOS; результати ще не підтверджені |
+| Нова Issue для ЛР3 | Створена: [Issue #13](https://github.com/Nazar90990/kzp-lab01-hrytsyk/issues/13) | Попередня [Issue #11](https://github.com/Nazar90990/kzp-lab01-hrytsyk/issues/11) стосується ЛР2 і станом на 2026-11-14 відкрита |
+| Pull Request | Очікує створення | Гілка `lab-03-java` опублікована; [порівняння з `main`](https://github.com/Nazar90990/kzp-lab01-hrytsyk/compare/main...lab-03-java?expand=1) |
+| CI run | Успішно, [run #51](https://github.com/Nazar90990/kzp-lab01-hrytsyk/actions/runs/43643645074) | Ubuntu, Windows і macOS пройшли; завантажено три JAR-артефакти |
 | Git-тег | Тег `v3.0.0` очікує злиття змін | У `pom.xml` задано версію `3.0.0`; тег не створювався |
 
 ## 12. Порівняння поведінки
