@@ -2,7 +2,7 @@ package ua.lpnu.kzp;
 
 import java.util.List;
 
-/** Обчислює показники для набору перевірених записів. */
+/** Обчислює показники для різнорідного набору перевірених показників. */
 public final class UtilityReportCalculator {
 
     private UtilityReportCalculator() {
@@ -11,16 +11,16 @@ public final class UtilityReportCalculator {
     /**
      * Обчислює сумарне споживання, вартість і максимум.
      *
-     * @param records перевірені записи
+     * @param records перевірені показники будь-яких реалізацій базового типу
      * @return агреговані показники
      */
-    public static Summary calculate(List<UtilityRecord> records) {
+    public static Summary calculate(List<? extends UtilityReading> records) {
         double totalConsumption = 0.0;
         double totalCost = 0.0;
         double maximumConsumption = 0.0;
-        for (UtilityRecord record : records) {
+        for (UtilityReading record : records) {
             totalConsumption += record.value();
-            totalCost += record.value() * record.tariff();
+            totalCost += record.consumptionCost();
             maximumConsumption = Math.max(maximumConsumption, record.value());
         }
         return new Summary(records.size(), totalConsumption, totalCost, maximumConsumption);
